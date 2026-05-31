@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <meta name="theme-color" content="#7c3aed"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <title>Calculadora de Álgebra - Paso a Paso</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.4.2/math.min.js"></script>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="cta-page">
+
+  <!-- CALCULATOR CARD -->
+  <div class="cta-card">
+
+    <!-- Display -->
+    <div class="cta-display">
+      <div class="cta-display-hist" id="ctaHist">Escribe una ecuación y presiona Calcular</div>
+      <div class="cta-display-row">
+        <input type="text" id="ctaInput" class="cta-input" placeholder="ej: 2x + 5 = 15"
+          autocomplete="off" autocorrect="off" spellcheck="false" aria-label="Ecuación algebraica"/>
+        <button class="cta-xbtn" id="ctaXBtn" aria-label="Borrar">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M10 3L3 10M3 3l7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Solve bar -->
+    <div class="cta-solvebar">
+      <div class="cta-solvebar-l">
+        <span class="cta-bar-lbl">Resolver para:</span>
+        <div class="cta-selwrap">
+          <select id="ctaVarSel" class="cta-sel" aria-label="Variable">
+            <option value="x">x</option><option value="y">y</option>
+            <option value="z">z</option><option value="a">a</option><option value="b">b</option>
+          </select>
+          <span class="cta-sel-arr">▾</span>
+        </div>
+      </div>
+      <div class="cta-solvebar-r">
+        <button class="cta-pill" id="ctaTrig" aria-pressed="false">Trig</button>
+        <button class="cta-pill" id="ctaHyp" aria-pressed="false">Hyp</button>
+      </div>
+    </div>
+
+    <!-- Variables -->
+    <div class="cta-vars">
+      <span class="cta-sec-lbl">Variables</span>
+      <div class="cta-var-row" role="group" aria-label="Variables">
+        <button class="cta-vbtn" data-v="s">s</button>
+        <button class="cta-vbtn" data-v="t">t</button>
+        <button class="cta-vbtn" data-v="u">u</button>
+        <button class="cta-vbtn" data-v="v">v</button>
+        <button class="cta-vbtn" data-v="w">w</button>
+        <button class="cta-vbtn on" data-v="x">x</button>
+        <button class="cta-vbtn" data-v="y">y</button>
+        <button class="cta-vbtn" data-v="z">z</button>
+      </div>
+    </div>
+
+    <!-- Calc row -->
+    <div class="cta-calc-row">
+      <button class="cta-navbtn" id="ctaPrev" aria-label="Anterior">&#8249;</button>
+      <button class="cta-calcbtn" id="ctaCalc" aria-label="Calcular">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span id="ctaCalcTxt">Calcular</span>
+        <span class="cta-spin" id="ctaSpin"></span>
+      </button>
+      <button class="cta-navbtn" id="ctaNext" aria-label="Siguiente">&#8250;</button>
+    </div>
+
+    <!-- Scientific -->
+    <div class="cta-sci-grid" id="ctaSciGrid" role="group" aria-label="Funciones científicas">
+      <button class="cta-sci" data-i="^2">x&#178;</button>
+      <button class="cta-sci" data-i="sqrt(">&#8730;</button>
+      <button class="cta-sci" data-i="exp(">EXP</button>
+      <button class="cta-sci" data-i="log(">log</button>
+      <button class="cta-sci" data-i="ln(">ln</button>
+      <button class="cta-sci" data-i="abs(">| |</button>
+      <button class="cta-sci" data-i="!">!</button>
+      <button class="cta-sci" data-i="1/">1/x</button>
+      <button class="cta-sci" data-i="10^">10^</button>
+      <button class="cta-sci" data-i="%">%</button>
+      <button class="cta-sci" data-i=">">&gt;</button>
+      <button class="cta-sci" data-i=">=">&ge;</button>
+      <button class="cta-sci" data-i="<">&lt;</button>
+      <button class="cta-sci" data-i="<=">&le;</button>
+      <button class="cta-sci" data-i="pi">&pi;</button>
+      <button class="cta-sci" data-i="e">e</button>
+      <button class="cta-sci" data-i="i">i</button>
+      <button class="cta-sci" data-i="^">^</button>
+      <button class="cta-sci" data-i="(">(</button>
+      <button class="cta-sci" data-i=")">)</button>
+    </div>
+
+    <div class="cta-div"></div>
+
+    <!-- Keypad -->
+    <div class="cta-keypad" role="group" aria-label="Teclado numerico">
+      <button class="cta-n" data-i="1">1</button>
+      <button class="cta-n" data-i="2">2</button>
+      <button class="cta-n" data-i="3">3</button>
+      <button class="cta-o" data-i="/" aria-label="dividir">&#247;</button>
+      <button class="cta-d" id="ctaDel" aria-label="Borrar">&#x232B;</button>
+      <button class="cta-n" data-i="4">4</button>
+      <button class="cta-n" data-i="5">5</button>
+      <button class="cta-n" data-i="6">6</button>
+      <button class="cta-o" data-i="*" aria-label="multiplicar">&times;</button>
+      <button class="cta-a" id="ctaAC" aria-label="Limpiar">AC</button>
+      <button class="cta-n" data-i="7">7</button>
+      <button class="cta-n" data-i="8">8</button>
+      <button class="cta-n" data-i="9">9</button>
+      <button class="cta-o" data-i="-" aria-label="restar">&minus;</button>
+      <button class="cta-e" data-i="=" aria-label="igual">=</button>
+      <button class="cta-n" data-i=".">.</button>
+      <button class="cta-n" data-i="0">0</button>
+      <button class="cta-o" id="ctaSign" aria-label="cambiar signo">+/&minus;</button>
+      <button class="cta-o" data-i="+" aria-label="sumar">+</button>
+      <button class="cta-o" data-i="^" aria-label="potencia">x&#8319;</button>
+    </div>
+
+    <!-- Examples -->
+    <div class="cta-examples">
+      <span class="cta-sec-lbl">Ejemplos:</span>
+      <div class="cta-ex-row">
+        <button class="cta-ex" data-eq="2x + 5 = 15">2x+5=15</button>
+        <button class="cta-ex" data-eq="3x - 7 = 2x + 4">3x-7=2x+4</button>
+        <button class="cta-ex" data-eq="x^2 - 9 = 0">x^2-9=0</button>
+        <button class="cta-ex" data-eq="x^2 - 5x + 6 = 0">x^2-5x+6=0</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- STEP-BY-STEP PANEL -->
+  <div id="ctaStepsPanel" style="display:none"></div>
+
+</div>
+<div class="cta-toast" id="ctaToast" role="alert"></div>
+<script src="solver.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
